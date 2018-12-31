@@ -12,8 +12,7 @@
  * Lesser General Public License for more details.
  * 
  * You should have received a copy of the GNU Lesser General Public
- * License along with this library.
- */
+ * License along with this library. */
 package com.jpexs.decompiler.flash.exporters;
 
 import com.jpacker.JPacker;
@@ -91,12 +90,6 @@ import org.monte.media.avi.AVIWriter;
 public class FrameExporter {
 
     private static final Logger logger = Logger.getLogger(FrameExporter.class.getName());
-    
-    private static String generateFrameFilename(int frame, int highestFrame) { // TODO: add option to disable padding
-        int numDigits = (int)(Math.log10(highestFrame + 1) + 1); // https://stackoverflow.com/a/1306751
-        String format = "%0" + numDigits + "d";
-        return String.format(format, frame + 1);
-    }
 
     public List<File> exportButtonFrames(AbortRetryIgnoreHandler handler, String outdir, SWF swf, int containerId, List<Integer> frames, ButtonExportSettings settings, EventListener evl) throws IOException, InterruptedException {
         FrameExportMode fem;
@@ -189,11 +182,6 @@ public class FrameExporter {
         Path.createDirectorySafe(foutdir);
 
         final List<Integer> fframes = frames;
-        int maxFrame = 0;
-        for(int frame : fframes){
-            if(maxFrame < frame) maxFrame = frame;
-        }
-        final int fMaxFrame = maxFrame;
 
         Color backgroundColor = null;
         SetBackgroundColorTag setBgColorTag = swf.getBackgroundColor();
@@ -212,7 +200,7 @@ public class FrameExporter {
                 final Color fbackgroundColor = null;
                 new RetryTask(() -> {
                     int frame = fframes.get(fi);
-                    File f = new File(foutdir + File.separator + generateFrameFilename(frame, fMaxFrame) + ".svg");
+                    File f = new File(foutdir + File.separator + (frame + 1) + ".svg");
                     try (OutputStream fos = new BufferedOutputStream(new FileOutputStream(f))) {
                         ExportRectangle rect = new ExportRectangle(tim.displayRect);
                         rect.xMax *= settings.zoom;
@@ -372,7 +360,7 @@ public class FrameExporter {
             } else {
                 for (Integer frame : fframes) {
                     new RetryTask(() -> {
-                        File f = new File(foutdir + File.separator + generateFrameFilename(frame, fMaxFrame) + ".swf");
+                        File f = new File(foutdir + File.separator + (frame + 1) + ".swf");
                         Frame fn = (Frame) tim.getFrame(frame);
 
                         try (OutputStream fos = new BufferedOutputStream(new FileOutputStream(f))) {
@@ -439,7 +427,7 @@ public class FrameExporter {
                 for (int i = 0; frameImages.hasNext(); i++) {
                     final int fi = i;
                     new RetryTask(() -> {
-                        File f = new File(foutdir + File.separator + generateFrameFilename(fframes.get(fi) + 1, fMaxFrame) + ".bmp");
+                        File f = new File(foutdir + File.separator + (fframes.get(fi) + 1) + ".bmp");
                         BMPFile.saveBitmap(frameImages.next(), f);
                         ret.add(f);
                     }, handler).run();
@@ -449,9 +437,9 @@ public class FrameExporter {
                 for (int i = 0; frameImages.hasNext(); i++) {
                     final int fi = i;
                     new RetryTask(() -> {
-                        File f = new File(foutdir + File.separator + generateFrameFilename(fframes.get(fi) + 1, fMaxFrame) + ".png");
-                        ImageHelper.write(frameImages.next(), ImageFormat.PNG, f);
-                        ret.add(f);
+                        File file = new File(foutdir + File.separator + (fframes.get(fi) + 1) + ".png");
+                        ImageHelper.write(frameImages.next(), ImageFormat.PNG, file);
+                        ret.add(file);
                     }, handler).run();
                 }
 
