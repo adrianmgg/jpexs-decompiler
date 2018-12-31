@@ -92,10 +92,15 @@ public class FrameExporter {
 
     private static final Logger logger = Logger.getLogger(FrameExporter.class.getName());
 
-    private static String generateFrameFilename(int frame, int highestFrame) { // TODO: add option to disable padding
-        int numDigits = (int) (Math.log10(highestFrame + 1) + 1); // https://stackoverflow.com/a/1306751
-        String format = "%0" + numDigits + "d";
-        return String.format(format, frame + 1);
+    private static String generateFrameFilename(int frame, int highestFrame) {
+        if(Configuration.padExportedFilenames.get()){
+            int numDigits = (int) (Math.log10(highestFrame + 1) + 1); // https://stackoverflow.com/a/1306751
+            String format = "%0" + numDigits + "d";
+            return String.format(format, frame + 1);
+        }
+        else{
+            return Integer.toString(frame + 1);
+        }
     }
     
     public List<File> exportButtonFrames(AbortRetryIgnoreHandler handler, String outdir, SWF swf, int containerId, List<Integer> frames, ButtonExportSettings settings, EventListener evl) throws IOException, InterruptedException {

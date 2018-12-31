@@ -66,6 +66,10 @@ public final class Configuration {
     public static final Level logLevel;
 
     public static boolean showStat;
+    
+    @ConfigurationDefaultBoolean(true)
+    @ConfigurationCategory("export")
+    public static final ConfigurationItem<Boolean> padExportedFilenames = null;
 
     @ConfigurationDefaultBoolean(true)
     @ConfigurationCategory("ui")
