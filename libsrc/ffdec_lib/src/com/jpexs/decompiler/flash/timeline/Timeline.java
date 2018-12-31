@@ -12,8 +12,7 @@
  * Lesser General Public License for more details.
  * 
  * You should have received a copy of the GNU Lesser General Public
- * License along with this library.
- */
+ * License along with this library. */
 package com.jpexs.decompiler.flash.timeline;
 
 import com.jpexs.decompiler.flash.SWF;
@@ -1051,28 +1050,22 @@ public class Timeline {
     }
 
     private static String getTagIdPrefix(Tag tag, SVGExporter exporter) {
-        String tagType = "tag";
         if (tag instanceof ShapeTag) {
-            tagType = "shape";
+            return exporter.getUniqueId("shape");
         }
         if (tag instanceof MorphShapeTag) {
-            tagType = "morphshape";
+            return exporter.getUniqueId("morphshape");
         }
         if (tag instanceof DefineSpriteTag) {
-           tagType = "sprite";
+            return exporter.getUniqueId("sprite");
         }
         if (tag instanceof TextTag) {
-            tagType = "text";
+            return exporter.getUniqueId("text");
         }
         if (tag instanceof ButtonTag) {
-            tagType = "button";
+            return exporter.getUniqueId("button");
         }
-        
-        int tagId = tag.getId();
-        if(tag instanceof CharacterIdTag){
-            tagId = ((CharacterIdTag)tag).getCharacterId();
-        }
-        return exporter.getUniqueId(String.format("%s_%d_",tagType,tagId));
+        return exporter.getUniqueId("tag");
     }
 
     public void toHtmlCanvas(StringBuilder result, double unitDivisor, List<Integer> frames) {
